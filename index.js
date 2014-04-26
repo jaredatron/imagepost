@@ -13,7 +13,7 @@ ImagePost.prototype.attr = function(attribute, value) {
 };
 
 ImagePost.prototype.toCanvas = function() {
-  var fontSize = this.attr('font-size');
+  var fontSize = Number(this.attr('font-size'));
   var fontFamily = this.attr('font-family');
   var top = 50;
   var text = this.attr('text');
@@ -38,14 +38,17 @@ ImagePost.prototype.toImage = function() {
 
 $(function() {
 
-  imagePost = new ImagePost;
+  var textarea = $('#input');
+  var fontSize = $('#font-size');
+  var imagePost = new ImagePost;
 
-  $('#input').keyup(function(event) {
-    update($(this).val());
-  });
+  textarea.keyup(update);
+  fontSize.change(update);
 
-  function update(text) {
-    imagePost.attr('text', text);
+  function update() {
+    imagePost.attr('text', textarea.val());
+    imagePost.attr('font-size', fontSize.val());
+
     var canvas = imagePost.toCanvas();
     $("#canvas-container").html(canvas);
     var image = imagePost.toImage();
