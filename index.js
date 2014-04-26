@@ -1,3 +1,21 @@
+
+
+
+
+
+
+
+ImagePostStyle = function() {
+  this.attr = new Attributes;
+};
+
+
+
+
+
+
+
+
 ImagePost = function() {
   this.attr('font-size', 20);
   this.attr('font-family', 'Georgia');
