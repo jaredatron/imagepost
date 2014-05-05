@@ -2,15 +2,16 @@ $(function() {
 
   var textarea = $('#input');
   var fontSize = $('#font-size');
-  var imagePost = new ImagePost;
 
   textarea.keyup(update);
   fontSize.change(update);
 
   function update() {
-    imagePost.attr('text',      textarea.val());
-    imagePost.attr('font-size', fontSize.val());
-
+    var imagePost = new ImagePost({
+      text: textarea.val(),
+      style: 1,
+    });
+    console.log(imagePost);
     var canvas = imagePost.toCanvas();
     $("#canvas-container").html(canvas);
     var image = imagePost.toImage();
