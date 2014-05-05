@@ -5,6 +5,8 @@ ImagePost = function(attributes) {
 };
 
 ImagePost.prototype.toCanvas = function() {
+  if (this.canvas) return this.canvas;
+
   var fontSize = Number(this.style.fontSize);
   var fontFamily = this.style.fontFamily;
   var text = this.text;
@@ -20,14 +22,15 @@ ImagePost.prototype.toCanvas = function() {
 
   var lines = text.split("\n");
   var top = (510/2) - (fontSize * ((lines.length / 2)-1));
-  console.log(top)
 
   lines.forEach(function(line) {
     context.fillText(line, 510 / 2, top);
     top = top + fontSize;
   });
 
-  // $(canvas).css({'background-image': this.style.backgroundImage});
+  console.log('rewncerd dcanvas');
+
+  this.canvas = canvas;
 
   return canvas;
 };

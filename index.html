@@ -3,17 +3,22 @@
 <head>
   <title></title>
   <style type="text/css">
-    textarea, #image-container, #canvas-container, #html-container{
+    #image-container, #canvas-container, #html-container{
       width: 510px;
       height: 510px;
       text-align: center;
       font-size: 42px;
       font-family: Helvetica;
-      border: 1px solid black;
+      /*border: 1px solid black;*/
       background-attachment: fixed;
       background-size: cover;
       opacity: 1;
       background-repeat: no-repeat no-repeat;
+    }
+
+    h3{
+      margin: 0;
+      padding: 0;
     }
 
     .image-post {
@@ -37,35 +42,84 @@
       white-space: pre;
     }
 
+    .image-post-form .image-post-text-wrapper {
+      display: table;
+      height: 510px;
+      width: 510px;
+      /*border: 1px solid black;*/
+    }
+
+    .image-post-form .image-post-text-wrapper .image-post-text {
+      display: table-cell;
+      line-height: 510px;
+    }
+    .image-post-form .image-post-text-wrapper .image-post-text textarea{
+      display:inline-block;
+      line-height: normal;
+      margin: 0;
+      padding: 0;
+      font-size: 42px;
+      line-height: 42px;
+      vertical-align: middle;
+      text-align: center;
+      white-space: pre;
+      border: none;
+      outline: none;
+      background: transparent;
+      resize: none;
+      color: inherit;
+    }
+
+    .float-left{
+      display: inline-block;
+      vertical-align: top;
+    }
+
   </style>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
-  <div class="image-post-form">
-    <p>
-      <textarea class="image-post-text" type="text" autofocus></textarea>
-    </p>
-    <p>
-      Style:
-      <select class="image-post-style">
-        <option value="0">0</option>
-        <option value="1">1</option>
-      </select>
-    </p>
+
+  <div class="float-left">
+    <h3> FORM </h3>
+    <div class="image-post-form">
+      <div class="image-post-text-wrapper">
+        <div class="image-post-text">
+          <textarea autofocus growing="y" rows="1"></textarea>
+        </div>
+      </div>
+      <p>
+        Style:
+        <select class="image-post-style">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </p>
+    </div>
   </div>
 
-  <h3>Canvas</h3>
-  <p id="canvas-container"></p>
 
-  <h3>Image</h3>
-  <p id="image-container"></p>
+  <div class="float-left">
+    <h3>Canvas</h3>
+    <div id="canvas-container"></div>
+  </div>
 
-  <h3>HTML</h3>
-  <p id="html-container"></p>
+  <div class="float-left">
+    <h3>Image</h3>
+    <div id="image-container"></div>
+  </div>
+
+  <div class="float-left">
+    <h3>HTML</h3>
+    <div id="html-container"></div>
+  </div>
 
 
 
-  <script type="text/javascript" src="attributes.js"></script>
+  <!--
+  <script type="text/javascript" src="jquery.growing-inputs.js"></script>
+   -->
   <script type="text/javascript" src="image_post.js"></script>
   <script type="text/javascript" src="image_post/style.js"></script>
   <script type="text/javascript" src="index.js"></script>
