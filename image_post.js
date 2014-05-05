@@ -27,8 +27,6 @@ ImagePost.prototype.toCanvas = function() {
     top = top + fontSize;
   });
 
-
-
   // $(canvas).css({'background-image': this.style.backgroundImage});
 
   return canvas;
@@ -42,3 +40,25 @@ ImagePost.prototype.toImage = function() {
 
 
 
+ImagePost.prototype.toHTML = function() {
+
+  var node = $(
+    '<div class="image-post">'     +
+      '<div class="text-wrapper">' +
+        '<div class="text"></div>' +
+      '</div>'                     +
+    '</div>'
+  ).addClass('image-post');
+
+  node.css({
+    height: '510px',
+    width: '510px',
+    color: this.style.fontColor,
+    backgroundImage: 'url('+this.style.backgroundImage.src+')',
+  })
+
+  node.find('.text').text(this.text);
+
+  return node;
+
+};

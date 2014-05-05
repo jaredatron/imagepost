@@ -3,7 +3,7 @@
 <head>
   <title></title>
   <style type="text/css">
-    textarea, #image-container, #canvas-container{
+    textarea, #image-container, #canvas-container, #html-container{
       width: 510px;
       height: 510px;
       text-align: center;
@@ -15,11 +15,33 @@
       opacity: 1;
       background-repeat: no-repeat no-repeat;
     }
+
+    .image-post {
+
+    }
+
+    .image-post .text-wrapper {
+      display: table;
+      height: 510px;
+      width: 510px;
+    }
+
+    .image-post .text-wrapper .text {
+      display: table-cell;
+      margin: 0;
+      padding: 0;
+      font-size: 42px;
+      line-height: 42px;
+      vertical-align: middle;
+      text-align: center;
+      white-space: pre;
+    }
+
   </style>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
-  <div class="image-post">
+  <div class="image-post-form">
     <p>
       <textarea class="image-post-text" type="text" autofocus></textarea>
     </p>
@@ -31,10 +53,18 @@
       </select>
     </p>
   </div>
-  Canvas
+
+  <h3>Canvas</h3>
   <p id="canvas-container"></p>
-  Image
+
+  <h3>Image</h3>
   <p id="image-container"></p>
+
+  <h3>HTML</h3>
+  <p id="html-container"></p>
+
+
+
   <script type="text/javascript" src="attributes.js"></script>
   <script type="text/javascript" src="image_post.js"></script>
   <script type="text/javascript" src="image_post/style.js"></script>

@@ -1,7 +1,7 @@
 $(function() {
 
-  var textarea = $('.image-post .image-post-text');
-  var styleSelect = $('.image-post .image-post-style');
+  var textarea = $('.image-post-form .image-post-text');
+  var styleSelect = $('.image-post-form .image-post-style');
 
   textarea.keyup(update);
   styleSelect.change(update);
@@ -12,10 +12,15 @@ $(function() {
       style: Number(styleSelect.val()),
     });
     console.log(imagePost);
+
     var canvas = imagePost.toCanvas();
     $("#canvas-container").html(canvas);
+
     var image = imagePost.toImage();
     $("#image-container").html(image);
+
+    var html = imagePost.toHTML();
+    $("#html-container").html(html);
   };
 
 });
