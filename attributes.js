@@ -5,12 +5,13 @@ function Attributes() {
   instance.values = {};
 
   function attributes(key, value) {
-    if (arguments.length < 2) return this.get(key);
+    if (arguments.length < 2) return instance.get(key);
     instance.set(key, value);
     return this;
   }
 
   attributes.values = instance.values;
+
   attributes.delete = instance.delete.bind(instance);
   attributes.get    = instance.get.bind(instance);
   attributes.set    = instance.set.bind(instance);
@@ -34,3 +35,10 @@ Attributes.prototype.delete = function(key) {
 };
 
 
+
+
+// object.attr('name') // => 'steve'
+// object.attr('name', 'steve') // => object
+// object.attr('name') // => 'steve'
+
+// object.attributeValues //=> {name:'steve'}
