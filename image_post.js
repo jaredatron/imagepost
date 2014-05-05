@@ -19,7 +19,7 @@ ImagePost.prototype.toCanvas = function() {
   context.textAlign = 'center';
 
   var lines = text.split("\n");
-  var top = (510/2) - (fontSize * (lines.length / 2));
+  var top = (510/2) - (fontSize * ((lines.length / 2)-1));
   console.log(top)
 
   lines.forEach(function(line) {
