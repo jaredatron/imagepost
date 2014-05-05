@@ -6,6 +6,7 @@
     textarea, #image-container, #canvas-container{
       width: 510px;
       height: 510px;
+      text-align: center;
       font-size: 42px;
       font-family: Helvetica;
       border: 1px solid black;
@@ -18,20 +19,18 @@
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
-  <p>
-    <textarea id="input" type="text" autofocus></textarea>
-  </p>
-  <p>
-    Font size:
-    <input type="number" id="font-size" value="20" min="0" max="100">
-  </p>
-  <p>
-    Font family:
-    <select id="font-family">
-      <option value="Georgia">Georgia</option>
-      <option value="san-serif">Georgia</option>
-    </select>
-  </p>
+  <div class="image-post">
+    <p>
+      <textarea class="image-post-text" type="text" autofocus></textarea>
+    </p>
+    <p>
+      Style:
+      <select class="image-post-style">
+        <option value="0">0</option>
+        <option value="1">1</option>
+      </select>
+    </p>
+  </div>
   Canvas
   <p id="canvas-container"></p>
   Image
