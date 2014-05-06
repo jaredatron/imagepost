@@ -5,10 +5,10 @@ Bundler.require :default, ENV['RACK_ENV']
 
 $:.unshift File.expand_path('..', __FILE__)
 
-DataMapper.setup(:default, 'postgres://localhost/imagepost')
-
-
 Dotenv.load if defined? Dotenv
+
+DataMapper.setup(:default, ENV['DATABASE_URL'])
+
 
 require 'image_post'
 require 'image_post/style'
