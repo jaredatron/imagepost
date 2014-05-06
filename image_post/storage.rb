@@ -1,29 +1,50 @@
 module ImagePost::Storage
 
-  def self.put path, body
-    file = files.create(key: path, body: body)
-    File.join(path_prefix, file.key)
+  def self.local?
+    ImagePost.env != :production
   end
 
-  def self.path_prefix
-    @path_prefix ||= case ImagePost.env
-    when :production
-      raise 'NOT IMPLEMENTED YET'
+  def self.put path, body
+    file = files.create(key: path, body: body, public: true)
+    url_to_file file
+  end
+
+  def self.url_to_file file
+    if local?
+      "/storage/#{ImagePost.env}/#{file.key}"
     else
-      "/storage/#{ImagePost.env}"
+      file.public_url
     end
   end
 
   def self.files
-    @fog_storage ||= case ImagePost.env
-    when :production
-      raise 'NOT IMPLEMENTED YET'
+    @files ||= directory.files
+  end
+
+  def self.directory
+    @directory ||= connection.directories.get(directory_name)
+  end
+
+  def self.directory_name
+    if local?
+      ImagePost.env.to_s
     else
-      local_storage = Fog::Storage.new({
+      ENV['IMAGE_POST_S3_BUCKET_NAME']
+    end
+  end
+
+  def self.connection
+    @connection ||= if local?
+      Fog::Storage.new({
         :local_root => ImagePost.root.join('public/storage'),
         :provider   => 'Local'
       })
-      local_storage.directories.create(key: ImagePost.env.to_s).files
+    else
+      Fog::Storage.new({
+        :provider              => 'AWS',
+        :aws_access_key_id     => ENV['IMAGE_POST_S3_ACCESS_KEY_ID'],
+        :aws_secret_access_key => ENV['IMAGE_POST_S3_SECRET_ACCESS_KEY'],
+      })
     end
   end
 

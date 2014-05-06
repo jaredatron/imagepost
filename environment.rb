@@ -8,6 +8,7 @@ $:.unshift File.expand_path('..', __FILE__)
 DataMapper.setup(:default, 'postgres://localhost/imagepost')
 
 
+Dotenv.load if defined? Dotenv
 
 require 'image_post'
 require 'image_post/style'

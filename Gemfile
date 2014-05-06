@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'haml'
 gem 'sass'
 gem 'sinatra-asset-pipeline'
@@ -13,4 +13,5 @@ gem 'fog'
 group :development do
   gem 'pry'
   gem 'shotgun'
+  gem 'dotenv'
 end

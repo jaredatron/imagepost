@@ -1,5 +1,6 @@
 require File.expand_path('../environment', __FILE__)
 require 'sinatra/asset_pipeline'
+require "sinatra/content_for"
 
 class Server < Sinatra::Base
 
@@ -7,10 +8,13 @@ class Server < Sinatra::Base
   set :assets_css_compressor, :sass
   register Sinatra::AssetPipeline
 
+  helpers Sinatra::ContentFor
+  helpers Sprockets::Helpers
+
   helpers do
-    include Sprockets::Helpers
 
     def url_to path
+      return path unless URI.parse(path).relative?
       url = URI.parse(request.url)
       url.path = path
       url.to_s
@@ -29,6 +33,7 @@ class Server < Sinatra::Base
         "background-image" => post.style.background_image ? "url(#{image_url post.style.background_image})" : nil,
       }.map{|k,v| "#{k}: #{v}; "}.join
     end
+
   end
 
   get '/' do
@@ -36,8 +41,9 @@ class Server < Sinatra::Base
   end
 
   post '/' do
-    post = ImagePost::Post.new
+    post  = ImagePost::Post.new
     image = ImagePost::Image.create(post.uuid, params['image'])
+
     post.text        = params['text'].to_s
     post.style_index = params['style_index'].to_i
     post.image_url   = url_to image.url
@@ -46,9 +52,14 @@ class Server < Sinatra::Base
     redirect to "/#{post.uuid}"
   end
 
-  get '/:uuid' do
+  get '/:uuid.?:format?' do
     @post = ImagePost::Post.first(uuid: params[:uuid])
-    haml :show
+    case params[:format]
+    when 'png'
+      redirect @post.image_url
+    else
+      haml :show
+    end
   end
 
 end
