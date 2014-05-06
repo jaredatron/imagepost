@@ -17,6 +17,23 @@ class Server < Sinatra::Base
 
   helpers do
 
+    def sign_in! user
+      session[:user_id] = user.id
+    end
+
+    def sign_out!
+      session.clear
+      @current_user = nil
+    end
+
+    def signed_in?
+      !session[:user_id].nil?
+    end
+
+    def current_user
+      @current_user ||= ImagePost::User.get(session[:user_id])
+    end
+
     def url_to path
       return path unless URI.parse(path).relative?
       url = URI.parse(request.url)
@@ -42,16 +59,8 @@ class Server < Sinatra::Base
       to('/oauth/callback')
     end
 
-    def twitter_api_key
-      ENV['IMAGE_POST_TWITTER_API_KEY']
-    end
-
-    def twitter_api_secret
-      ENV['IMAGE_POST_TWITTER_API_SECRET']
-    end
-
     def oauth_consumer
-      @oauth_consumer ||= OAuth::Consumer.new twitter_api_key, twitter_api_secret, :site => 'https://api.twitter.com'
+      @oauth_consumer ||= OAuth::Consumer.new ImagePost.twitter_api_key, ImagePost.twitter_api_secret, :site => 'https://api.twitter.com'
     end
 
   end
@@ -84,6 +93,8 @@ class Server < Sinatra::Base
 
 
   get '/oauth/request_token' do
+    return redirect to('/') if signed_in?
+
     request_token = oauth_consumer.get_request_token :oauth_callback => oauth_callback_url
     session[:twitter_oauth_request_token] = request_token.token
     session[:twitter_oauth_request_token_secret] = request_token.secret
@@ -94,19 +105,16 @@ class Server < Sinatra::Base
   end
 
   get '/oauth/callback' do
+    return redirect to('/') if signed_in?
+
     puts "CALLBACK: request: #{session[:twitter_oauth_request_token]}, #{session[:twitter_oauth_request_token_secret]}"
 
     request_token = OAuth::RequestToken.new oauth_consumer, session[:twitter_oauth_request_token], session[:twitter_oauth_request_token_secret]
     access_token = request_token.get_access_token :oauth_verifier => params[:oauth_verifier]
 
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key       = twitter_api_key
-      config.consumer_secret    = twitter_api_secret
-      config.oauth_token        = access_token.token
-      config.oauth_token_secret = access_token.secret
-    end
-
-    "[#{client.user.screen_name}] access_token: #{access_token.token}, secret: #{access_token.secret}"
+    user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
+    sign_in! user
+    redirect to('/')
   end
 
 end

@@ -8,4 +8,12 @@ module ImagePost
     @env ||= (ENV['RACK_ENV'] || 'development').to_sym
   end
 
+  def self.twitter_api_key
+    ENV['IMAGE_POST_TWITTER_API_KEY']
+  end
+
+  def self.twitter_api_secret
+    ENV['IMAGE_POST_TWITTER_API_SECRET']
+  end
+
 end
