@@ -1,3 +1,63 @@
-body
-  color: green
-  background: orange
+@import normalize
+
+html,
+body,
+body > .page,
+body > .page > .content
+  height: 100%
+  width: 100%
+
+$image-post-height: 510px
+$image-post-width: 510px
+
+// .image-post-form-container
+//   display: table
+//   margin: 0 auto
+//   width: $image-post-width
+//   min-height: $image-post-height
+//   height: 100%
+//   outline: 1px dotted purple
+//   text-align: center
+
+// .image-post-form
+//   display: table-cell
+//   outline: 1px dotted red
+//   // margin: 0 auto
+//   vertical-align: middle
+//   height: $image-post-height
+//   width: $image-post-width
+
+
+.image-post-form
+  margin: 2em auto
+  height: $image-post-height
+  width: $image-post-width
+
+  outline: 1px dotted red
+
+  .image-post-text-wrapper
+    display: table
+    height: $image-post-height
+    width: $image-post-width
+
+  .image-post-text
+    display: table-cell
+    line-height: $image-post-height
+
+  textarea
+    display: inline-block
+    width: 100%
+    line-height: normal
+    margin: 0
+    padding: 0
+    font-size: 42px
+    line-height: 42px
+    vertical-align: middle
+    text-align: center
+    white-space: pre
+    border: none
+    outline: none
+    background: transparent
+    resize: none
+    color: inherit
+    overflow: hidden
