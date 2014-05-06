@@ -1,0 +1,21 @@
+//= require 'image_post/style'
+
+ImagePost.styles = [
+  new ImagePost.Style({
+    fontColor       : 'black',
+    backgroundColor : 'white',
+  }),
+  new ImagePost.Style({
+    fontColor          : 'white',
+    backgroundImageSrc : '<%= image_path "blue.jpg" %>',
+  }),
+  new ImagePost.Style({
+    fontColor          : 'white',
+    backgroundImageSrc : '<%= image_path "purple.jpg" %>',
+  }),
+];
+
+
+ImagePost.randomStyle = function() {
+  return ImagePost.styles[Math.floor(Math.random()*ImagePost.styles.length)];
+};
