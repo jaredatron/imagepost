@@ -13,6 +13,16 @@ body
 $image-post-height: 510px
 $image-post-width: 510px
 
+
+
+.clear-both
+  clear: both
+
+.pull-right
+  float: right
+
+
+
 .image-post-form
   margin: 2em auto
   height: $image-post-height
@@ -49,8 +59,24 @@ $image-post-width: 510px
   .image-post-publish-wrapper
     text-align: center
 
-.clear-both
-  clear: both
 
-.pull-right
-  float: right
+.previews
+  text-align: center
+
+.image-post
+  display: inline-block
+
+  .text-wrapper
+    display: table
+    height: 510px
+    width: 510px
+
+    .text
+      display: table-cell
+      margin: 0
+      padding: 0
+      font-size: 42px
+      line-height: 42px
+      vertical-align: middle
+      text-align: center
+      white-space: pre

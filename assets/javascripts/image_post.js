@@ -1,7 +1,7 @@
 ImagePost = function(attributes) {
   this.text  = "";
   for (var p in attributes) this[p] = attributes[p];
-  this.style = ImagePost.styles[attributes.style];
+  // this.style = ImagePost.styles[attributes.style];
 };
 
 ImagePost.prototype.toCanvas = function() {
@@ -27,8 +27,6 @@ ImagePost.prototype.toCanvas = function() {
     context.fillText(line, 510 / 2, top);
     top = top + fontSize;
   });
-
-  console.log('rewncerd dcanvas');
 
   this.canvas = canvas;
 
