@@ -1,5 +1,4 @@
-Bundler.require
-
+require File.expand_path('../environment', __FILE__)
 require 'sinatra/asset_pipeline'
 
 class Server < Sinatra::Base
@@ -17,15 +16,17 @@ class Server < Sinatra::Base
   end
 
   post '/' do
-    ImagePost.create(
-      text:  params[:text],
-      image: params[:image],
-      style: params[:style],
-    )
+    post = Post.new
+    post.text  = params['text'].to_s
+    post.style = params['style'].to_i
+    post.image = params['image'].to_s
+    binding.pry
+    redirect to "/#{post.uuid}"
   end
 
-  get '/:id' do
-    # display an image post
+  get '/:uuid' do
+    @post = Post.first(uuid: params[:uuid])
+    haml :show
   end
 
 end
