@@ -9,6 +9,9 @@ gem 'dm-postgres-adapter'
 gem 'data_mapper'
 gem 'dm-migrations'
 gem 'fog'
+gem 'thin'
+gem 'oauth'
+gem 'twitter'
 
 group :development do
   gem 'pry'

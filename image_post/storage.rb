@@ -22,7 +22,8 @@ module ImagePost::Storage
   end
 
   def self.directory
-    @directory ||= connection.directories.get(directory_name)
+    @directory ||= connection.directories.get(directory_name) or
+      connection.directories.create(key: directory_name, public: true)
   end
 
   def self.directory_name

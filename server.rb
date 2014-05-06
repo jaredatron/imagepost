@@ -7,7 +7,10 @@ class Server < Sinatra::Base
   set :assets_precompile, %w(application.js application.css *.png *.jpg *.svg *.eot *.ttf *.woff)
   set :assets_prefix, %w(assets vendor/assets)
   set :assets_css_compressor, :sass
+
   register Sinatra::AssetPipeline
+
+  enable :sessions
 
   helpers Sinatra::ContentFor
   helpers Sprockets::Helpers
@@ -33,6 +36,22 @@ class Server < Sinatra::Base
         "background-color" => post.style.background_color,
         "background-image" => post.style.background_image ? "url(#{image_url post.style.background_image})" : nil,
       }.map{|k,v| "#{k}: #{v}; "}.join
+    end
+
+    def oauth_callback_url
+      to('/oauth/callback')
+    end
+
+    def twitter_api_key
+      ENV['IMAGE_POST_TWITTER_API_KEY']
+    end
+
+    def twitter_api_secret
+      ENV['IMAGE_POST_TWITTER_API_SECRET']
+    end
+
+    def oauth_consumer
+      @oauth_consumer ||= OAuth::Consumer.new twitter_api_key, twitter_api_secret, :site => 'https://api.twitter.com'
     end
 
   end
@@ -61,6 +80,33 @@ class Server < Sinatra::Base
     else
       haml :show
     end
+  end
+
+
+  get '/oauth/request_token' do
+    request_token = oauth_consumer.get_request_token :oauth_callback => oauth_callback_url
+    session[:twitter_oauth_request_token] = request_token.token
+    session[:twitter_oauth_request_token_secret] = request_token.secret
+
+    puts "request: #{session[:twitter_oauth_request_token]}, #{session[:twitter_oauth_request_token_secret]}"
+
+    redirect request_token.authorize_url
+  end
+
+  get '/oauth/callback' do
+    puts "CALLBACK: request: #{session[:twitter_oauth_request_token]}, #{session[:twitter_oauth_request_token_secret]}"
+
+    request_token = OAuth::RequestToken.new oauth_consumer, session[:twitter_oauth_request_token], session[:twitter_oauth_request_token_secret]
+    access_token = request_token.get_access_token :oauth_verifier => params[:oauth_verifier]
+
+    client = Twitter::REST::Client.new do |config|
+      config.consumer_key       = twitter_api_key
+      config.consumer_secret    = twitter_api_secret
+      config.oauth_token        = access_token.token
+      config.oauth_token_secret = access_token.secret
+    end
+
+    "[#{client.user.screen_name}] access_token: #{access_token.token}, secret: #{access_token.secret}"
   end
 
 end
