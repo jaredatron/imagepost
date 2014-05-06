@@ -27,18 +27,17 @@ class ImagePost::Style
     :background_color,
     :background_image
 
-  def background_image_url
-    @background_image ? "/assets/#{@background_image}" : nil
-  end
-
-  def to_json options=nil
+  def as_json options=nil
     {
       "fontSize"           => font_size,
       "fontFamily"         => font_family,
       "fontColor"          => font_color,
       "backgroundColor"    => background_color,
-      "backgroundImageUrl" => background_image_url,
-    }.to_json(options)
+    }
+  end
+
+  def to_json options=nil
+    as_json.to_json(options)
   end
 
 end

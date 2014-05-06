@@ -1,4 +1,12 @@
-ImagePost.styles = <%= ImagePost::Style.all.to_json %>;
+ImagePost.styles = <%=
+  ImagePost::Style.all.map do |style|
+    json = style.as_json
+    if style.background_image
+      json["backgroundImageUrl"] = image_path(style.background_image)
+    end
+    next json
+  end.to_json
+%>;
 
 $.each(ImagePost.styles, function(index, style){
   if (!style.backgroundImageUrl) return;
