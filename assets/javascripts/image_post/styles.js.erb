@@ -7,6 +7,6 @@ $.each(ImagePost.styles, function(index, style){
   style.backgroundImage = image;
 });
 
-ImagePost.randomStyle = function() {
-  return ImagePost.styles[Math.floor(Math.random()*ImagePost.styles.length)];
+ImagePost.randomStyleIndex = function() {
+  return Math.floor(Math.random()*ImagePost.styles.length);
 };

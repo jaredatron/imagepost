@@ -1,6 +1,7 @@
 ImagePost = function(attributes) {
   this.text  = "";
   for (var p in attributes) this[p] = attributes[p];
+  this.style = ImagePost.styles[this.styleIndex];
 };
 
 ImagePost.prototype.toCanvas = function() {
@@ -69,7 +70,7 @@ ImagePost.prototype.toHTML = function() {
     fontSize:        this.style.fontSize,
     fontFamily:      this.style.fontFamily,
     backgroundColor: this.style.backgroundColor ? this.style.backgroundColor : 'transparent',
-    backgroundImage: this.style.backgroundImageUrl ? 'url('+this.style.backgroundImageUrl+')' : null,
+    backgroundImage: this.style.backgroundImageUrl ? 'url('+this.style.backgroundImageUrl+')' : false,
   })
 
   node.find('.text').text(this.text);

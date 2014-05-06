@@ -10,8 +10,8 @@
 - font_size: 42
   font_family: Helvetica
   font_color: white
-  background_color: purple.jpg
+  background_image: purple.jpg
 - font_size: 42
   font_family: Helvetica
   font_color: white
-  background_color: orange.jpg
+  background_image: orange.jpg
