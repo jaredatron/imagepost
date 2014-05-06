@@ -5,6 +5,10 @@ require 'rubygems'
 require 'bundler'
 
 require File.expand_path('../../environment', __FILE__)
-# require 'pry'
 
-Pry.start
+if defined?(Pry)
+  Pry.start
+else
+  require 'irb'
+  IRB.start
+end
