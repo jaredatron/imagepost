@@ -4,6 +4,7 @@ require "sinatra/content_for"
 
 class Server < Sinatra::Base
 
+  set :assets_precompile, %w(application.js application.css *.png *.jpg *.svg *.eot *.ttf *.woff)
   set :assets_prefix, %w(assets vendor/assets)
   set :assets_css_compressor, :sass
   register Sinatra::AssetPipeline
