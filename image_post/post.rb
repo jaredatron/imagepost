@@ -17,4 +17,8 @@ class ImagePost::Post
     @style ||= ImagePost::Style[style_index] if style_index
   end
 
+  def title
+    text.scan(/((?:@|#)\w+)/).flatten.join(' ')
+  end
+
 end
