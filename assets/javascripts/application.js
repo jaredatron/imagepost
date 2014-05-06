@@ -37,7 +37,7 @@ $(function() {
   });
 
   $(document).on('click', '.image-post-form .random-style-button', function() {
-    styleIndex = ImagePost.randomStyleIndex();
+    styleIndex = ImagePost.randomStyleIndex(styleIndex);
     setImagePostFormStyle();
   });
 
