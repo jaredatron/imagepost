@@ -16,16 +16,18 @@ class Server < Sinatra::Base
   end
 
   post '/' do
-    post = Post.new
-    post.text  = params['text'].to_s
-    post.style = params['style'].to_i
-    post.image = params['image'].to_s
-    binding.pry
+    post = ImagePost::Post.new
+    image = ImagePost::Image.create(post.uuid, params['image'])
+    post.text      = params['text'].to_s
+    post.style     = params['style'].to_i
+    post.image_url = image.url
+    post.save!
+
     redirect to "/#{post.uuid}"
   end
 
   get '/:uuid' do
-    @post = Post.first(uuid: params[:uuid])
+    @post = ImagePost::Post.first(uuid: params[:uuid])
     haml :show
   end
 

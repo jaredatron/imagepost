@@ -1,21 +1,15 @@
 ENV['RACK_ENV'] ||= 'development'
 
-Bundler.require ENV['RACK_ENV']
+Bundler.require :default, ENV['RACK_ENV']
 
-$:.unshift File.expand_path('../models', __FILE__)
+$:.unshift File.expand_path('..', __FILE__)
 
 DataMapper.setup(:default, 'postgres://localhost/imagepost')
-require 'post'
 
 
-case ENV['RACK_ENV']
-when 'development'
+require 'image_post'
+require 'image_post/post'
+require 'image_post/image'
+require 'image_post/storage'
 
 
-end
-
-
-storage = Fog::Storage.new({
-  :local_root => '~/fog',
-  :provider   => 'Local'
-})

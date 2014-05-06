@@ -56,7 +56,7 @@ ImagePost.prototype.toHTML = function() {
         '<div class="text"></div>' +
       '</div>'                     +
     '</div>'
-  ).addClass('image-post');
+  );
 
   node.css({
     height: '510px',

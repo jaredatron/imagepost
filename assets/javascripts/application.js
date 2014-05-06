@@ -77,8 +77,8 @@ $(function() {
     // var canvas = imagePost.toCanvas();
     // $("#canvas-container").html(canvas);
 
-    // var image = imagePost.toImage();
-    // $(".image-preview").html(image);
+    var image = imagePost.toImage();
+    $(".image-preview").html(image);
 
     // var html = imagePost.toHTML();
     // $(".html-preview").html(html);
