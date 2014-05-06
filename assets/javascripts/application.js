@@ -42,8 +42,12 @@ $(function() {
   });
 
   $(document).on('keyup change', '.image-post-form .image-post-text textarea', function(event) {
-    updatePreviews();
+    update();
   });
+
+
+
+
 
   setImagePostFormStyle(style);
 
@@ -57,24 +61,27 @@ $(function() {
       backgroundColor: style.backgroundColor || "transparent",
       backgroundImage: 'url('+style.backgroundImage.src+')',
     });
+    update();
   };
 
-  function updatePreviews() {
+  function update() {
     var imagePost = new ImagePost({
       text:  $('.image-post-form .image-post-text textarea').val() || " ",
       style: style,
     });
 
+    $('.image-post-form input[name="text"]').val(imagePost.text);
+    $('.image-post-form input[name="style"]').val(0)
+    $('.image-post-form input[name="image"]').val(imagePost.toImageData());
 
+    // var canvas = imagePost.toCanvas();
+    // $("#canvas-container").html(canvas);
 
-    var canvas = imagePost.toCanvas();
-    $("#canvas-container").html(canvas);
+    // var image = imagePost.toImage();
+    // $(".image-preview").html(image);
 
-    var image = imagePost.toImage();
-    $(".image-preview").html(image);
-
-    var html = imagePost.toHTML();
-    $(".html-preview").html(html);
+    // var html = imagePost.toHTML();
+    // $(".html-preview").html(html);
   }
 
 });

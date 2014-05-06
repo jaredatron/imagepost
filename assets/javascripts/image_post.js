@@ -1,7 +1,6 @@
 ImagePost = function(attributes) {
   this.text  = "";
   for (var p in attributes) this[p] = attributes[p];
-  // this.style = ImagePost.styles[attributes.style];
 };
 
 ImagePost.prototype.toCanvas = function() {
@@ -13,6 +12,9 @@ ImagePost.prototype.toCanvas = function() {
 
   var canvas = $('<canvas>').attr('height', '510px').attr('width', '510px')[0];
   var context = canvas.getContext("2d");
+
+  context.fillStyle = this.style.backgroundColor;
+  context.fillRect(0,0,510,510);
 
   context.drawImage(this.style.backgroundImage, 0, 0, 510, 510, 0, 0, 510, 510)
 
@@ -33,9 +35,14 @@ ImagePost.prototype.toCanvas = function() {
   return canvas;
 };
 
+ImagePost.prototype.toImageData = function() {
+  return this.toCanvas().toDataURL("image/png");
+};
+
+
 ImagePost.prototype.toImage = function() {
   var image = new Image;
-  image.src = this.toCanvas().toDataURL("image/png");
+  image.src = this.toImageData();
   return image;
 };
 
@@ -55,6 +62,7 @@ ImagePost.prototype.toHTML = function() {
     height: '510px',
     width: '510px',
     color: this.style.fontColor,
+    backgroundColor: this.style.backgroundColor,
     backgroundImage: 'url('+this.style.backgroundImage.src+')',
   })
 

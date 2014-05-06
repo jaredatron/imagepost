@@ -17,7 +17,11 @@ class Server < Sinatra::Base
   end
 
   post '/' do
-    # create an image post
+    ImagePost.create(
+      text:  params[:text],
+      image: params[:image],
+      style: params[:style],
+    )
   end
 
   get '/:id' do

@@ -1,4 +1,7 @@
-.image-post-form
+%form.image-post-form{action: "/", method: "post"}
+  %input{type:"hidden", name: "text",  value:""}
+  %input{type:"hidden", name: "style", value:""}
+  %input{type:"hidden", name: "image", value:""}
   .image-post-text-wrapper
     .image-post-text
       %textarea{autofocus: true,  growing: "y", rows:"1",  wrap: "off", placeholder: "Your text here"}
@@ -7,10 +10,10 @@
     .pull-right
       %a.random-style-button{href:""} Random
   .image-post-publish-wrapper
-    %a{href:""} Publish
+    %input.publish-button{type: "submit", value: "Publish"}
 
 
-.previews
-  .image-preview
-  .html-preview
+-# .previews
+-#   .image-preview
+-#   .html-preview
 
