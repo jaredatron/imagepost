@@ -56,10 +56,13 @@ $(function() {
   };
 
   function setImagePostFormStyle(style) {
+    console.log(style)
     $('.image-post-form .image-post-text-wrapper').css({
       color:           style.fontColor,
-      backgroundColor: style.backgroundColor || "transparent",
-      backgroundImage: 'url('+style.backgroundImage.src+')',
+      fontSize:        style.fontSize,
+      fontFamily:      style.fontFamily,
+      backgroundColor: style.backgroundColor ? style.backgroundColor : 'transparent',
+      backgroundImage: style.backgroundImageUrl ? 'url('+style.backgroundImageUrl+')' : null,
     });
     update();
   };

@@ -13,10 +13,14 @@ ImagePost.prototype.toCanvas = function() {
   var canvas = $('<canvas>').attr('height', '510px').attr('width', '510px')[0];
   var context = canvas.getContext("2d");
 
-  context.fillStyle = this.style.backgroundColor;
-  context.fillRect(0,0,510,510);
+  if (this.style.backgroundColor){
+    context.fillStyle = this.style.backgroundColor;
+    context.fillRect(0,0,510,510);
+  }
 
-  context.drawImage(this.style.backgroundImage, 0, 0, 510, 510, 0, 0, 510, 510)
+  if (this.style.backgroundImage){
+    context.drawImage(this.style.backgroundImage, 0, 0, 510, 510, 0, 0, 510, 510);
+  }
 
   context.font = fontSize+"px "+fontFamily;
   context.fillStyle = this.style.fontColor;
@@ -59,11 +63,13 @@ ImagePost.prototype.toHTML = function() {
   );
 
   node.css({
-    height: '510px',
-    width: '510px',
-    color: this.style.fontColor,
-    backgroundColor: this.style.backgroundColor,
-    backgroundImage: 'url('+this.style.backgroundImage.src+')',
+    height:          '510px',
+    width:           '510px',
+    color:           this.style.fontColor,
+    fontSize:        this.style.fontSize,
+    fontFamily:      this.style.fontFamily,
+    backgroundColor: this.style.backgroundColor ? this.style.backgroundColor : 'transparent',
+    backgroundImage: this.style.backgroundImageUrl ? 'url('+this.style.backgroundImageUrl+')' : null,
   })
 
   node.find('.text').text(this.text);

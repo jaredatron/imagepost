@@ -1,0 +1,17 @@
+---
+- font_size: 42
+  font_family: Helvetica
+  font_color: black
+  background_color: white
+- font_size: 42
+  font_family: Helvetica
+  font_color: white
+  background_image: blue.jpg
+- font_size: 42
+  font_family: Helvetica
+  font_color: white
+  background_color: purple.jpg
+- font_size: 42
+  font_family: Helvetica
+  font_color: white
+  background_color: orange.jpg

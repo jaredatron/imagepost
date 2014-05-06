@@ -1,20 +1,11 @@
-//= require 'image_post/style'
+ImagePost.styles = <%= ImagePost::Style.all.to_json %>;
 
-ImagePost.styles = [
-  new ImagePost.Style({
-    fontColor       : 'black',
-    backgroundColor : 'white',
-  }),
-  new ImagePost.Style({
-    fontColor          : 'white',
-    backgroundImageSrc : '<%= image_path "blue.jpg" %>',
-  }),
-  new ImagePost.Style({
-    fontColor          : 'white',
-    backgroundImageSrc : '<%= image_path "purple.jpg" %>',
-  }),
-];
-
+$.each(ImagePost.styles, function(index, style){
+  if (!style.backgroundImageUrl) return;
+  var image = new Image
+  image.src = style.backgroundImageUrl;
+  style.backgroundImage = image;
+});
 
 ImagePost.randomStyle = function() {
   return ImagePost.styles[Math.floor(Math.random()*ImagePost.styles.length)];
