@@ -74,7 +74,7 @@ $(function() {
     console.log(imagePost);
 
     $('.image-post-form input[name="text"]').val(imagePost.text);
-    $('.image-post-form input[name="style"]').val(0)
+    $('.image-post-form input[name="style_index"]').val(styleIndex)
     $('.image-post-form input[name="image"]').val(imagePost.toImageData());
 
     // var canvas = imagePost.toCanvas();

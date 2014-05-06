@@ -9,6 +9,26 @@ class Server < Sinatra::Base
 
   helpers do
     include Sprockets::Helpers
+
+    def url_to path
+      url = URI.parse(request.url)
+      url.path = path
+      url.to_s
+    end
+
+    def image_url name
+      url_to image_path(name)
+    end
+
+    def style_for_post post
+      {
+        "color"            => post.style.font_color,
+        "font-size"        => post.style.font_size,
+        "font-family"      => post.style.font_family,
+        "background-color" => post.style.background_color,
+        "background-image" => post.style.background_image ? "url(#{image_url post.style.background_image})" : nil,
+      }.map{|k,v| "#{k}: #{v}; "}.join
+    end
   end
 
   get '/' do
@@ -18,9 +38,9 @@ class Server < Sinatra::Base
   post '/' do
     post = ImagePost::Post.new
     image = ImagePost::Image.create(post.uuid, params['image'])
-    post.text      = params['text'].to_s
-    post.style     = params['style'].to_i
-    post.image_url = image.url
+    post.text        = params['text'].to_s
+    post.style_index = params['style_index'].to_i
+    post.image_url   = url_to image.url
     post.save!
 
     redirect to "/#{post.uuid}"

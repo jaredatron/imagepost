@@ -1,16 +1,14 @@
--# %meta{:name => "twitter:card",      :content => "photo"}/
--# %meta{:name => "twitter:site",      :content => ""}/
--# %meta{:name => "twitter:creator",   :content => ""}/
--# %meta{:name => "twitter:title",     :content => ""}/
--# %meta{:name => "twitter:image:src", :content => "https://dl.dropboxusercontent.com/s/0ftdtj6u1r0vp2o/Picture%202014-05-05%20at%203.13.36%20PM.png"}/
--# %meta{:name => "twitter:domain",    :content => ""}/
+%meta{:name => "twitter:card",      :content => "photo"}/
+%meta{:name => "twitter:site",      :content => ""}/
+%meta{:name => "twitter:creator",   :content => ""}/
+%meta{:name => "twitter:title",     :content => @post.text}/
+%meta{:name => "twitter:image:src", :content => @post.image_url}/
+%meta{:name => "twitter:domain",    :content => request.host}/
 
-
-%textarea= @post.inspect
-
-%img{src: @post.image_url}
-
-
-.image-post
-  .text-wrapper
-    .text
+.image-post-wrapper
+  .image-post{style: style_for_post(@post)}
+    .text-wrapper
+      .text<>
+        ~ preserve do
+          :escaped
+            #{@post.text}
