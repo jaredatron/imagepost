@@ -12,6 +12,7 @@ gem 'fog'
 gem 'thin'
 gem 'oauth'
 gem 'twitter'
+gem 'omniauth-twitter'
 
 group :development do
   gem 'pry'

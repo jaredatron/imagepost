@@ -15,6 +15,10 @@ class Server < Sinatra::Base
   helpers Sinatra::ContentFor
   helpers Sprockets::Helpers
 
+  use OmniAuth::Builder do
+    provider :twitter, ImagePost.twitter_api_key, ImagePost.twitter_api_secret
+  end
+
   helpers do
 
     def sign_in! user
@@ -69,28 +73,19 @@ class Server < Sinatra::Base
     haml :index
   end
 
-  post '/' do
-    post  = ImagePost::Post.new
-    image = ImagePost::Image.create(post.uuid, params['image'])
-
-    post.text        = params['text'].to_s
-    post.style_index = params['style_index'].to_i
-    post.image_url   = url_to image.url
-    post.save!
-
-    redirect to "/#{post.uuid}"
+  get '/sign_in' do
+    redirect to("/auth/twitter")
   end
 
-  get '/:uuid.?:format?' do
-    @post = ImagePost::Post.first(uuid: params[:uuid])
-    case params[:format]
-    when 'png'
-      redirect @post.image_url
-    else
-      haml :show
-    end
+  get '/auth/twitter/callback' do
+    binding.pry
+    # env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
+    "You are now logged in"
   end
 
+  get '/auth/failure' do
+    params[:message]
+  end
 
   get '/oauth/request_token' do
     return redirect to('/') if signed_in?
@@ -115,6 +110,28 @@ class Server < Sinatra::Base
     user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
     sign_in! user
     redirect to('/')
+  end
+
+  post '/' do
+    post  = ImagePost::Post.new
+    image = ImagePost::Image.create(post.uuid, params['image'])
+
+    post.text        = params['text'].to_s
+    post.style_index = params['style_index'].to_i
+    post.image_url   = url_to image.url
+    post.save!
+
+    redirect to "/#{post.uuid}"
+  end
+
+  get '/:uuid.?:format?' do
+    @post = ImagePost::Post.first(uuid: params[:uuid])
+    case params[:format]
+    when 'png'
+      redirect @post.image_url
+    else
+      haml :show
+    end
   end
 
 end
