@@ -15,6 +15,13 @@ class Server < Sinatra::Base
   helpers Sinatra::ContentFor
   helpers Sprockets::Helpers
 
+  use Rack::Session::Cookie, 
+    :key => 'rack.session',
+    # :domain => 'foo.com',
+    :path => '/',
+    :expire_after => 2592000, # In seconds
+    :secret => 'a3dda2c072b411b2d96bcf44981f7a29901e42b4'
+
   use OmniAuth::Builder do
     provider :twitter, ImagePost.twitter_api_key, ImagePost.twitter_api_secret
   end
@@ -112,6 +119,8 @@ class Server < Sinatra::Base
     redirect to('/')
   end
 
+  require 'open-uri'
+
   post '/' do
     post  = ImagePost::Post.new
     image = ImagePost::Image.create(post.uuid, params['image'])
@@ -121,6 +130,17 @@ class Server < Sinatra::Base
     post.image_url   = url_to image.url
     post.save!
 
+    binding.pry
+
+    if current_user
+      # uri = URI.parse(post.image_url)
+      # media = uri.open
+      # media.instance_eval("def original_filename; '#{File.basename(uri.path)}'; end")
+      current_user.twitter_client.update_with_media(post.title, image.to_string_io)
+    end
+
+
+
     redirect to "/#{post.uuid}"
   end
 
@@ -129,8 +149,10 @@ class Server < Sinatra::Base
     case params[:format]
     when 'png'
       redirect @post.image_url
-    else
+    when 'html', nil
       haml :show
+    else
+      404
     end
   end
 
