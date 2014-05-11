@@ -17,8 +17,6 @@ require 'image_post/style'
 require 'image_post/post'
 require 'image_post/image'
 require 'image_post/storage'
-require 'image_post/twitter'
-require 'image_post/twitter/post'
 
 
 DataMapper.finalize

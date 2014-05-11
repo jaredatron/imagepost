@@ -1,2 +1,0 @@
-module ImagePost::Twitter
-end
