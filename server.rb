@@ -94,7 +94,7 @@ class Server < Sinatra::Base
       sign_in! user
       redirect to('/')
     else
-      "Login failed"
+      "Login failed\n\n#{env['omniauth.auth'].inspect}"
     end
   end
 
