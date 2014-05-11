@@ -8,11 +8,5 @@
 
   %body
     .page
-      - if signed_in?
-        %textarea= current_user.inspect
-        -# %img{src: current_user.twitter_client.user.profile_image_uri.to_s}
-        %span Welcome back #{current_user.name}
-      - else
-        %a{href: '/oauth/request_token'} Sign in with twitter
       .content= yield
 

@@ -38,13 +38,11 @@ class Server < Sinatra::Base
     end
 
     def signed_in?
-      # !session[:user_id].nil?
-      true
+      !session[:user_id].nil? && !current_user.nil?
     end
 
     def current_user
-      # @current_user ||= ImagePost::User.get(session[:user_id])
-      @current_user ||= ImagePost::User.first
+      @current_user ||= ImagePost::User.get(session[:user_id])
     end
 
     def url_to path
@@ -79,7 +77,11 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-    haml :index
+    if signed_in?
+      redirect to('/post')
+    else
+      haml :homepage
+    end
   end
 
   get '/sign_in' do
@@ -87,43 +89,29 @@ class Server < Sinatra::Base
   end
 
   get '/auth/twitter/callback' do
-    binding.pry
-    # env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
-    "You are now logged in"
+    if env['omniauth.auth'].valid?
+      access_token = env['omniauth.auth']["extra"]["access_token"]
+      user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
+      sign_in! user
+      redirect to('/')
+    else
+      "Login failed"
+    end
   end
 
   get '/auth/failure' do
-    params[:message]
+    "Login failed: #{params[:message]}"
   end
 
-  get '/oauth/request_token' do
-    return redirect to('/') if signed_in?
+  get '/post' do
+    abort(redirect('/')) unless signed_in?
 
-    request_token = oauth_consumer.get_request_token :oauth_callback => oauth_callback_url
-    session[:twitter_oauth_request_token] = request_token.token
-    session[:twitter_oauth_request_token_secret] = request_token.secret
-
-    puts "request: #{session[:twitter_oauth_request_token]}, #{session[:twitter_oauth_request_token_secret]}"
-
-    redirect request_token.authorize_url
+    haml :'post/new'
   end
 
-  get '/oauth/callback' do
-    return redirect to('/') if signed_in?
+  post '/post' do
+    abort(redirect('/')) unless signed_in?
 
-    puts "CALLBACK: request: #{session[:twitter_oauth_request_token]}, #{session[:twitter_oauth_request_token_secret]}"
-
-    request_token = OAuth::RequestToken.new oauth_consumer, session[:twitter_oauth_request_token], session[:twitter_oauth_request_token_secret]
-    access_token = request_token.get_access_token :oauth_verifier => params[:oauth_verifier]
-
-    user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
-    sign_in! user
-    redirect to('/')
-  end
-
-  require 'open-uri'
-
-  post '/' do
     post  = ImagePost::Post.new
     image = ImagePost::Image.create(post.uuid, params['image'])
 
@@ -132,22 +120,24 @@ class Server < Sinatra::Base
     post.image_url   = url_to image.url
     post.save!
 
-    redirect to "/#{post.uuid}"
+    redirect to "/post/#{post.uuid}"
   end
 
-  get '/:uuid.?:format?' do
+  get '/post/:uuid.?:format?' do
     @post = ImagePost::Post.first(uuid: params[:uuid])
     case params[:format]
     when 'png'
       redirect @post.image_url
     when 'html', nil
-      haml :show
+      haml :'post/show'
     else
       404
     end
   end
 
-  post '/:uuid/tweet' do
+  post '/post/:uuid/tweet' do
+    abort(redirect('/')) unless signed_in?
+
     post  = ImagePost::Post.first(uuid: params[:uuid])
     image = ImagePost::Image.get(params[:uuid]).body
 

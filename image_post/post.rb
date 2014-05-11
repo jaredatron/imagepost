@@ -14,11 +14,15 @@ class ImagePost::Post
   property :created_at,  DateTime
 
   def style
-    @style ||= ImagePost::Style[style_index] if style_index
+    ImagePost::Style[style_index] if style_index
   end
 
   def title
     text.scan(/((?:@|#)\w+)/).flatten.join(' ')
+  end
+
+  def image
+    ImagePost::Image.get(uuid)
   end
 
 end
