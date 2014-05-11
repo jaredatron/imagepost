@@ -1,6 +1,18 @@
-%h1 Welcome to _______
+%form.image-post-form{action: "/post", method: "post"}
+  %input{type:"hidden", name: "text",        value:""}
+  %input{type:"hidden", name: "style_index", value:""}
+  %input{type:"hidden", name: "image",       value:""}
+  .image-post-text-wrapper
+    .image-post-text
+      %textarea{autofocus: true,  growing: "y", rows:"1",  wrap: "off", placeholder: "Your text here"}
+  .image-post-options.clear-both
+    %a.upload-image-button{href:""} Upload
+    .pull-right
+      %a.random-style-button{href:""} Random
+  .image-post-publish-wrapper
+    - if signed_in?
+      %input{type: "submit", style: "display:none"}
+      %button Post on Twitter
 
-%h2 Please Sign in to Twitter
-
-%a{href:"/auth/twitter"}
-  %img{src: "https://dev.twitter.com/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"}
+    - else
+      %a{href:"/auth/twitter"} Post on Twitter
