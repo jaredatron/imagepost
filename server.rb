@@ -148,7 +148,9 @@ class Server < Sinatra::Base
     File.open(path, 'wb'){|f| f.write image }
     file = File.open(path)
 
-    tweet = current_user.twitter_client.update_with_media('test', file)
+    status = "#{post.title} #{to("/post/#{post.uuid}")}"
+
+    tweet = current_user.twitter_client.update_with_media(status, file)
 
     redirect tweet.uri.to_s
   end
