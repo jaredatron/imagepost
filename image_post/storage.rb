@@ -9,6 +9,10 @@ module ImagePost::Storage
     url_to_file file
   end
 
+  def self.get path
+    files.get(path)
+  end
+
   def self.url_to_file file
     if local?
       "/storage/#{ImagePost.env}/#{file.key}"

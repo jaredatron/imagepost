@@ -9,6 +9,10 @@ class ImagePost::Image
     new uuid, url, data
   end
 
+  def self.get uuid
+    ImagePost::Storage.get("#{uuid}.png")
+  end
+
   def initialize uuid, url, data
     @uuid, @url, @data = uuid, url, data
   end

@@ -124,43 +124,13 @@ class Server < Sinatra::Base
   require 'open-uri'
 
   post '/' do
+    post  = ImagePost::Post.new
+    image = ImagePost::Image.create(post.uuid, params['image'])
 
-    image = params['image'].sub('data:image/png;base64,', '')
-    image = Base64.decode64(image)
-    path = Tempfile.new(Time.now.to_i.to_s).path + '.png'
-    File.open(path, 'wb'){|f| f.write image }
-    file = File.open(path)
-
-    tweet = current_user.twitter_client.update_with_media('test', upload)
-
-
-
-    # post  = ImagePost::Post.new
-    # image = ImagePost::Image.create(post.uuid, params['image'])
-
-    # post.text        = params['text'].to_s
-    # post.style_index = params['style_index'].to_i
-    # post.image_url   = url_to image.url
-    # post.save!
-
-
-    # if current_user
-    #   # uri = URI.parse(post.image_url)
-    #   # media = uri.open
-    #   # media.instance_eval("def original_filename; '#{File.basename(uri.path)}'; end")
-
-    #   # current_user.twitter_client.update_with_media(post.title, image.to_string_io)
-
-    #   image_data = params['image'].sub('data:image/png;base64,', '')
-    #   image_data = Base64.decode64(image_data)
-    #   image_data = StringIO.new(image_data)
-
-    #   media = UploadIO.new(image_data,  "image/png", "image.png")
-
-    #   binding.pry
-
-    #   current_user.twitter_client.update_with_media(post.title, media)
-    # end
+    post.text        = params['text'].to_s
+    post.style_index = params['style_index'].to_i
+    post.image_url   = url_to image.url
+    post.save!
 
     redirect to "/#{post.uuid}"
   end
@@ -175,6 +145,22 @@ class Server < Sinatra::Base
     else
       404
     end
+  end
+
+  post '/:uuid/tweet' do
+    post  = ImagePost::Post.first(uuid: params[:uuid])
+    image = ImagePost::Image.get(params[:uuid]).body
+
+    # image = HTTParty.get(post.image_url)
+    # image = params['image'].sub('data:image/png;base64,', '')
+    # image = Base64.decode64(image)
+    path = Tempfile.new(Time.now.to_i.to_s).path + '.png'
+    File.open(path, 'wb'){|f| f.write image }
+    file = File.open(path)
+
+    tweet = current_user.twitter_client.update_with_media('test', file)
+
+    redirect tweet.uri.to_s
   end
 
 end
