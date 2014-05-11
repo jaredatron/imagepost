@@ -11,16 +11,10 @@ class Server < Sinatra::Base
   register Sinatra::AssetPipeline
 
   enable :sessions
+  set :session_secret, 'a3dda2c072b411b2d96bcf44981f7a29901e42b4'
 
   helpers Sinatra::ContentFor
   helpers Sprockets::Helpers
-
-  use Rack::Session::Cookie,
-    :key => 'rack.session',
-    # :domain => 'foo.com',
-    :path => '/',
-    :expire_after => 2592000, # In seconds
-    :secret => 'a3dda2c072b411b2d96bcf44981f7a29901e42b4'
 
   use OmniAuth::Builder do
     provider :twitter, ImagePost.twitter_api_key, ImagePost.twitter_api_secret
@@ -86,6 +80,11 @@ class Server < Sinatra::Base
 
   get '/sign_in' do
     redirect to("/auth/twitter")
+  end
+
+  get '/sign_out' do
+    sign_out!
+    redirect to('/')
   end
 
   get '/auth/twitter/callback' do
