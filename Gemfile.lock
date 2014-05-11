@@ -90,6 +90,9 @@ GEM
     http (0.5.0)
       http_parser.rb
     http_parser.rb (0.5.3)
+    httparty (0.12.0)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     json (1.8.1)
     json_pure (1.8.1)
     memoizable (0.2.0)
@@ -97,6 +100,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.0)
     multi_json (1.9.0)
+    multi_xml (0.5.5)
     multipart-post (2.0.0)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
@@ -188,6 +192,8 @@ DEPENDENCIES
   dotenv
   fog
   haml
+  httparty
+  multipart-post
   oauth
   omniauth-twitter
   pry

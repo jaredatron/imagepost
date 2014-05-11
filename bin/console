@@ -7,7 +7,7 @@ require 'bundler'
 require File.expand_path('../../environment', __FILE__)
 
 if defined?(Pry)
-  Pry.start
+  Pry.start(ImagePost)
 else
   require 'irb'
   IRB.start

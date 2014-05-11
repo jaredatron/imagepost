@@ -15,7 +15,7 @@ class Server < Sinatra::Base
   helpers Sinatra::ContentFor
   helpers Sprockets::Helpers
 
-  use Rack::Session::Cookie, 
+  use Rack::Session::Cookie,
     :key => 'rack.session',
     # :domain => 'foo.com',
     :path => '/',
@@ -136,10 +136,12 @@ class Server < Sinatra::Base
       # uri = URI.parse(post.image_url)
       # media = uri.open
       # media.instance_eval("def original_filename; '#{File.basename(uri.path)}'; end")
-      current_user.twitter_client.update_with_media(post.title, image.to_string_io)
+
+      # current_user.twitter_client.update_with_media(post.title, image.to_string_io)
+
+      media = UploadIO.new(params['image'])
+      current_user.twitter_client.update_with_media(post.title, media)
     end
-
-
 
     redirect to "/#{post.uuid}"
   end

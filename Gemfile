@@ -13,6 +13,8 @@ gem 'thin'
 gem 'oauth'
 gem 'twitter'
 gem 'omniauth-twitter'
+gem 'httparty'
+gem 'multipart-post'
 
 group :development do
   gem 'pry'
