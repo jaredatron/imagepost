@@ -13,12 +13,13 @@ class ImagePost::User
 
   def self.find_or_create_by_twitter_oauth_token! oauth_token
     client = ImagePost::TwitterClient.new(oauth_token.token, oauth_token.secret)
-    first_or_create({twitter_id: client.user.id}, {
-      twitter_id:                 client.user.id,
+    user = first_or_create(twitter_id: client.user.id)
+    user.update!({
       name:                       client.user.name,
       twitter_oauth_token:        oauth_token.token,
       twitter_oauth_token_secret: oauth_token.secret,
     })
+    user
   end
 
   def twitter_client
