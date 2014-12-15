@@ -34,6 +34,15 @@ ImagePost = component
       ImagePostRendering(@state)
 
       FormGroup
+        label: 'Background Image'
+        ImageUploadInput
+          value: @state.backgroundImage
+          onChange: (img) =>
+            @setState(backgroundImage: img)
+            if img
+              @setState(height: img.height, width: img.width)
+
+      FormGroup
         label: 'Size'
         IntegerInput
           valueLink: @linkState('height')
@@ -97,21 +106,10 @@ ImagePost = component
         ImagePostTextInput
           valueLink: @linkState('text')
 
-      FormGroup
-        label: 'Background Image'
-        ImageUploadInput
-          valueLink: @linkState('backgroundImage')
-
-
 IntegerInput = component
   render: ->
-    input
-      type:  'number'
-      value: @props.valueLink.value
-      onChange: (event) =>
-        value = Number(event.target.value)
-        return if isNaN(value)
-        @props.valueLink.requestChange(value)
+    @props.type = 'number'
+    input(@props)
 
 FormGroup = component
   focusFirstInput: ->
@@ -174,6 +172,7 @@ FONT_WEIGHTS = [
   '800',
   '900',
 ]
+
 FontWeightSelectInput = component
   render: ->
     options = FONT_WEIGHTS.map (value, index) ->
@@ -244,15 +243,15 @@ ImageUploadInput = component
     reader.readAsDataURL(file)
 
   onLoad: (event) ->
-    src = event.target.result
-    @props.valueLink.requestChange(src)
+    image = document.createElement('img')
+    image.src = event.target.result
+    @props.onChange(image)
 
   clear: ->
-    @props.valueLink.requestChange(null)
+    @props.onChange(null)
 
   render: ->
-    if @props.valueLink.value
-      image = img(src:@props.valueLink.value)
+    if @props.value
       clearButton = button(onClick: @clear, 'clear')
 
     selectFilebutton = span
@@ -263,8 +262,8 @@ ImageUploadInput = component
         onChange: @onChange
     div
       className: 'ImageUploadInput'
-      image
       clearButton
+      '  '
       selectFilebutton
 
 
@@ -285,16 +284,16 @@ ImagePostRendering = component
 
 
 renderImageSrc = (props) ->
-  fontStyle       = String(props.fontStyle)
-  fontWeight      = String(props.fontWeight)
+  fontStyle       = props.fontStyle
+  fontWeight      = props.fontWeight
   fontSize        = Number(props.fontSize)
-  fontFamily      = String(props.fontFamily)
+  fontFamily      = props.fontFamily
   height          = Number(props.height)
   width           = Number(props.width)
-  textColor       = String(props.textColor)
-  backgroundColor = String(props.backgroundColor)
-  backgroundImage = String(props.backgroundImage)
-  textStrokeColor = String(props.textStrokeColor)
+  textColor       = props.textColor
+  backgroundColor = props.backgroundColor
+  backgroundImage = props.backgroundImage
+  textStrokeColor = props.textStrokeColor
   textStrokeSize  = Number(props.textStrokeSize)
   textPadding     = Number(props.textPadding)
 
@@ -308,7 +307,7 @@ renderImageSrc = (props) ->
   context.fillRect(0,0,width,height)
 
   if backgroundImage
-    context.drawImage(createImgTag(backgroundImage), 0, 0, width, height)
+    context.drawImage(backgroundImage, 0, 0, width, height)
 
 
   context.font         = "#{fontStyle} normal #{fontWeight} #{fontSize}px #{fontFamily}"
@@ -339,20 +338,10 @@ renderImageSrc = (props) ->
       y = height - (fontSize*(lines.length-1)) - textPadding
 
   lines.forEach (line) ->
-    context.fillText(line, x, y)
     context.strokeText(line, x, y) if textStrokeSize > 0
+    context.fillText(line, x, y)
 
     y += fontSize
 
-
-
-  window.DEBUG_CANVAS = canvas
-  window.DEBUG_CANVAS_CONTEXT = context
-
   return canvas.toDataURL("image/png")
 
-
-createImgTag = (src) ->
-  x = document.createElement('img')
-  x.src = src
-  x
