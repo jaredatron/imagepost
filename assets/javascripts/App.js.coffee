@@ -14,7 +14,7 @@ ImagePost = component
   getInitialState: ->
     height: 300
     width: 400
-    fontFamily: 'Georgia'
+    fontFamily: AvailableFontFamilies[0]
     fontSize: 20
     textAlign: 'tl'
     backgroundColor: 'white'
@@ -28,13 +28,11 @@ ImagePost = component
       ImagePostRendering(@state)
 
       FormGroup
-        label: 'Height'
+        label: 'Size'
         input
           type:     'number'
           valueLink: @linkState('height')
-
-      FormGroup
-        label: 'Width'
+        '  X  '
         input
           type:     'number'
           valueLink: @linkState('width')
