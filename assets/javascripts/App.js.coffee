@@ -17,6 +17,8 @@ ImagePost = component
     fontFamily: 'Georgia'
     fontSize: 20
     textAlign: 'tl'
+    backgroundColor: 'white'
+    textColor: 'black'
     text: "People of earth\ntake me to your leader"
 
   render: ->
@@ -38,6 +40,12 @@ ImagePost = component
           valueLink: @linkState('width')
 
       FormGroup
+        label: 'Background Color'
+        ColorPickerInput
+          valueLink: @linkState('backgroundColor')
+
+
+      FormGroup
         label: 'Text Align'
         TextAlignSelectInput
           valueLink: @linkState('textAlign')
@@ -52,6 +60,11 @@ ImagePost = component
         input
           type:     'number'
           valueLink: @linkState('fontSize')
+
+      FormGroup
+        label: 'Text Color'
+        ColorPickerInput
+          valueLink: @linkState('textColor')
 
       FormGroup
         label: 'Text'
@@ -134,6 +147,14 @@ TextAlignSelectInput = component
         radio('bc')
         radio('br')
 
+ColorPickerInput = component
+  render: ->
+    select(@props,
+      option(value: 'white', 'white')
+      option(value: 'black', 'black')
+      option(value: 'red', 'red')
+      option(value: 'orange', 'orange')
+    )
 
 
 ImagePostTextInput = component
@@ -157,10 +178,12 @@ ImagePostRendering = component
 
 
 renderImageSrc = (props) ->
-  fontSize   = Number(props.fontSize)
-  fontFamily = String(props.fontFamily)
-  height     = Number(props.height)
-  width      = Number(props.width)
+  fontSize        = Number(props.fontSize)
+  fontFamily      = String(props.fontFamily)
+  height          = Number(props.height)
+  width           = Number(props.width)
+  textColor       = String(props.textColor)
+  backgroundColor = String(props.backgroundColor)
 
   canvas = document.createElement('canvas')
   canvas.height = height
@@ -168,8 +191,11 @@ renderImageSrc = (props) ->
   context = canvas.getContext("2d")
 
 
+  context.fillStyle = backgroundColor
+  context.fillRect(0,0,width,height)
+
   context.font = "#{fontSize}px #{fontFamily}"
-  context.fillStyle = 'black'
+  context.fillStyle = textColor
   context.textBaseline = 'bottom'
 
   lines = props.text.split("\n")
