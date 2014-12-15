@@ -27,25 +27,43 @@ class Server < Sinatra::Base
     haml :homepage
   end
 
-  # get '/sign_in' do
-  #   redirect to("/auth/twitter")
-  # end
+  get '/auth/twitter/callback' do
+    if env['omniauth.auth'].valid?
+      access_token = env['omniauth.auth']["extra"]["access_token"]
+      user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
+      sign_in! user
+      redirect to('/')
+    else
+      "Login failed\n\n#{env['omniauth.auth'].inspect}"
+    end
+  end
 
-  # get '/sign_out' do
-  #   sign_out!
-  #   redirect to('/')
-  # end
+  post '/' do
+    post = ImagePost::Post.create!(
+      text:        params['text'],
+      style_index: params['style_index'].to_i,
+      image:       params['image'],
+    )
+    case params['autopost']
+    when 't'
+      abort redirect('/auth/twitter') unless connected_to_twitter?
+      current_user.post_to_twitter!(post)
+    # when 'f'
+    end
+    redirect to post_path(post)
+  end
 
-  # get '/auth/twitter/callback' do
-  #   if env['omniauth.auth'].valid?
-  #     access_token = env['omniauth.auth']["extra"]["access_token"]
-  #     user = ImagePost::User.find_or_create_by_twitter_oauth_token!(access_token)
-  #     sign_in! user
-  #     redirect to('/')
-  #   else
-  #     "Login failed\n\n#{env['omniauth.auth'].inspect}"
-  #   end
-  # end
+  get '/:uuid.?:format?' do
+    @post = ImagePost::Post.get(params[:uuid])
+    case params[:format]
+    when 'png'
+      redirect post_image_url(@post)
+    when 'html', nil
+      haml :show
+    else
+      404
+    end
+  end
 
   # get '/auth/failure' do
   #   "Login failed: #{params[:message]}"
@@ -71,17 +89,7 @@ class Server < Sinatra::Base
   #   redirect to "/post/#{post.uuid}"
   # end
 
-  # get '/post/:uuid.?:format?' do
-  #   @post = ImagePost::Post.first(uuid: params[:uuid])
-  #   case params[:format]
-  #   when 'png'
-  #     redirect @post.image_url
-  #   when 'html', nil
-  #     haml :'post/show'
-  #   else
-  #     404
-  #   end
-  # end
+
 
   # post '/post/:uuid/tweet' do
   #   abort(redirect('/')) unless signed_in?

@@ -1,5 +1,13 @@
 module Server::Helpers
 
+  def post_path post
+    "/#{post.uuid}"
+  end
+
+  def post_image_url post
+    @post.image.public_url
+  end
+
   def sign_in! user
     session[:user_id] = user.id
   end
@@ -10,11 +18,16 @@ module Server::Helpers
   end
 
   def signed_in?
-    !session[:user_id].nil? && !current_user.nil?
+    !session[:user_id].nil?
   end
 
   def current_user
-    @current_user ||= ImagePost::User.get(session[:user_id])
+    return nil unless signed_in?
+    @current_user ||= ImagePost::User.first(id: session[:user_id]) or sign_out!
+  end
+
+  def connected_to_twitter?
+    signed_in?
   end
 
   def url_to path

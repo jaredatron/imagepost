@@ -7,6 +7,11 @@
     %script{src: javascript_path('application')}
 
   %body
+    .nav
+      - if signed_in?
+        %textarea= current_user.inspect
     .page
       .content= yield
+
+
 

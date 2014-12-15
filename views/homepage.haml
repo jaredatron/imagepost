@@ -1,4 +1,4 @@
-%form.image-post-form{action: "/post", method: "post"}
+%form.image-post-form{action: "/", method: "post"}
   %input{type:"hidden", name: "text",        value:""}
   %input{type:"hidden", name: "style_index", value:""}
   %input{type:"hidden", name: "image",       value:""}
@@ -10,9 +10,5 @@
     .pull-right
       %a.random-style-button{href:""} Random
   .image-post-publish-wrapper
-    - if signed_in?
-      %input{type: "submit", style: "display:none"}
-      %button Post on Twitter
-
-    - else
-      %a{href:"/auth/twitter"} Post on Twitter
+    %input{type: "submit", style: "display:none"}
+    %button{name: "autopost", value: "t"} Post on Twitter
