@@ -16,7 +16,8 @@ ImagePost = component
     width: 400
     fontFamily: 'Georgia'
     fontSize: 20
-    text: ''
+    textAlign: 'tl'
+    text: "People of earth\ntake me to your leader"
 
   render: ->
     div
@@ -37,10 +38,14 @@ ImagePost = component
           valueLink: @linkState('width')
 
       FormGroup
+        label: 'Text Align'
+        TextAlignSelectInput
+          valueLink: @linkState('textAlign')
+
+      FormGroup
         label: 'Font Family'
         FontFamilySelectInput
           valueLink: @linkState('fontFamily')
-
 
       FormGroup
         label: 'Font Size'
@@ -94,6 +99,43 @@ FontFamilySelectInput = component
       valueLink: @props.valueLink
       options
 
+
+TextAlignSelectInput = component
+  getInitialState: ->
+    name: "TextAlignSelectInput-#{Math.round(Math.random() * 10000000)}"
+
+  render: ->
+    currentValue = @props.valueLink && @props.valueLink.value || @props.value
+    requestChange = @props.valueLink && @props.valueLink.requestChange
+    onChange = @props.onChange
+
+    radio = (value) =>
+      input
+        type:'radio',
+        name: @state.name,
+        value: value,
+        checked: value == currentValue
+        onChange: (event) ->
+          requestChange && requestChange(event.target.value)
+          onChange && onChange(event)
+
+    div
+      className: 'TextAlignSelectInput'
+      div null,
+        radio('tl')
+        radio('tc')
+        radio('tr')
+      div null,
+        radio('ml')
+        radio('mc')
+        radio('mr')
+      div null,
+        radio('bl')
+        radio('bc')
+        radio('br')
+
+
+
 ImagePostTextInput = component
   render: ->
     textarea
@@ -115,26 +157,45 @@ ImagePostRendering = component
 
 
 renderImageSrc = (props) ->
-  console.log('rendering image')
+  fontSize   = Number(props.fontSize)
+  fontFamily = String(props.fontFamily)
+  height     = Number(props.height)
+  width      = Number(props.width)
+
   canvas = document.createElement('canvas')
-  canvas.height = props.height
-  canvas.width = props.width
+  canvas.height = height
+  canvas.width  = width
   context = canvas.getContext("2d")
 
-  fontSize   = Number(props.fontSize)
-  fontFamily = props.fontFamily
 
   context.font = "#{fontSize}px #{fontFamily}"
   context.fillStyle = 'black'
-  context.textAlign = 'start'
+  context.textBaseline = 'bottom'
 
-  lines = props.text.split("\n");
+  lines = props.text.split("\n")
 
-  top = fontSize
+  switch props.textAlign[1]
+    when 'l'
+      context.textAlign = 'start'
+      x = 0
+    when 'c'
+      context.textAlign = 'center'
+      x = (width / 2)
+    when 'r'
+      context.textAlign = 'end'
+      x = width
+
+  switch props.textAlign[0]
+    when 't'
+      y = fontSize
+    when 'm'
+      y = (height / 2) - (fontSize / 2)
+    when 'b'
+      y = height - (fontSize*(lines.length-1))
+
   lines.forEach (line) ->
-    console.log('top: ', top)
-    context.fillText(line, 0, top)
-    top += fontSize
+    context.fillText(line, x, y)
+    y += fontSize
 
 
 
