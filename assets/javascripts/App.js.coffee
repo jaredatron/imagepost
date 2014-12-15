@@ -1,5 +1,5 @@
 component = React.component
-{div, span, textarea, canvas} = React.DOM
+{div, span, textarea, img} = React.DOM
 
 @App = component
   render: ->
@@ -22,11 +22,15 @@ ImagePost = component
       className: "ImagePost",
 
       ImagePostTextarea
+        height:   @state.height
+        width:    @state.width
         value:    @state.text
         onChange: @setText
 
       ImagePostRendering
-        text: @state.text
+        height: @state.height
+        width:  @state.width
+        text:   @state.text
 
 
 
@@ -38,10 +42,40 @@ ImagePostTextarea = component
       className: "ImagePostTextarea"
       value: @props.value
       onChange: @props.onChange
+      style:
+          height: @props.height+'px'
+          width:  @props.width+'px'
 
 ImagePostRendering = component
   render: ->
-    # `<canvas className="ImagePostRendering" />`
+
+    imgSrc = renderImageSrc(@props)
+
     div
       className: "ImagePostRendering"
-      @props.text
+      style:
+          height: @props.height+'px'
+          width:  @props.width+'px'
+      img
+        src: imgSrc
+
+
+renderImageSrc = (props) ->
+  console.log('rendering image')
+  canvas = document.createElement('canvas')
+  canvas.height = props.height
+  canvas.width = props.width
+  context = canvas.getContext("2d")
+
+  context.font = '20px Georgia'
+  context.fillStyle = 'black'
+  context.textAlign = 'start'
+
+  context.fillText(props.text, 0, 20)
+
+
+
+  window.DEBUG_CANVAS = canvas
+  window.DEBUG_CANVAS_CONTEXT = context
+
+  return canvas.toDataURL("image/png")
