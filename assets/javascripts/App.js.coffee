@@ -12,14 +12,18 @@ ImagePost = component
   mixins: [React.addons.LinkedStateMixin]
 
   getInitialState: ->
-    height: 300
-    width: 400
-    fontFamily: AvailableFontFamilies[0]
-    fontSize: 20
-    textAlign: 'tl'
+    height:          300
+    width:           400
+    fontStyle:       'normal'
+    fontWeight:      'normal'
+    fontSize:        20
+    fontFamily:      AvailableFontFamilies[0]
+    textAlign:       'tl'
     backgroundColor: 'white'
-    textColor: 'black'
-    text: "People of earth\ntake me to your leader"
+    textColor:       'black'
+    textStrokeColor: 'white',
+    textStrokeSize:  0,
+    text:            "People of earth\ntake me to your leader"
     backgroundImage: null
 
   render: ->
@@ -43,7 +47,6 @@ ImagePost = component
         ColorPickerInput
           valueLink: @linkState('backgroundColor')
 
-
       FormGroup
         label: 'Text Align'
         TextAlignSelectInput
@@ -55,6 +58,16 @@ ImagePost = component
           valueLink: @linkState('fontFamily')
 
       FormGroup
+        label: 'Font Style'
+        FontStyleSelectInput
+          valueLink: @linkState('fontStyle')
+
+      FormGroup
+        label: 'Font Weight'
+        FontWeightSelectInput
+          valueLink: @linkState('fontWeight')
+
+      FormGroup
         label: 'Font Size'
         input
           type:     'number'
@@ -64,6 +77,18 @@ ImagePost = component
         label: 'Text Color'
         ColorPickerInput
           valueLink: @linkState('textColor')
+
+
+      FormGroup
+        label: 'Text Stroke Color'
+        ColorPickerInput
+          valueLink: @linkState('textStrokeColor')
+
+      FormGroup
+        label: 'Text Stroke Size'
+        input
+          type:     'number'
+          valueLink: @linkState('textStrokeSize')
 
       FormGroup
         label: 'Text'
@@ -112,10 +137,37 @@ FontFamilySelectInput = component
       value = AvailableFontFamilies[name]
       option(key: index, value: value, name)
 
-    select
-      valueLink: @props.valueLink
-      options
+    select(valueLink: @props.valueLink, options)
 
+
+FontStyleSelectInput = component
+  render: ->
+    options = ['normal','italic','oblique'].map (value, index) ->
+      option(key: index, value: value, value)
+
+    select(valueLink: @props.valueLink, options)
+
+FONT_WEIGHTS = [
+  'normal',
+  'bold',
+  'bolder',
+  'lighter',
+  '100',
+  '200',
+  '300',
+  '400',
+  '500',
+  '600',
+  '700',
+  '800',
+  '900',
+]
+FontWeightSelectInput = component
+  render: ->
+    options = FONT_WEIGHTS.map (value, index) ->
+      option(key: index, value: value, value)
+
+    select(valueLink: @props.valueLink, options)
 
 TextAlignSelectInput = component
   getInitialState: ->
@@ -221,6 +273,8 @@ ImagePostRendering = component
 
 
 renderImageSrc = (props) ->
+  fontStyle       = String(props.fontStyle)
+  fontWeight      = String(props.fontWeight)
   fontSize        = Number(props.fontSize)
   fontFamily      = String(props.fontFamily)
   height          = Number(props.height)
@@ -228,6 +282,8 @@ renderImageSrc = (props) ->
   textColor       = String(props.textColor)
   backgroundColor = String(props.backgroundColor)
   backgroundImage = String(props.backgroundImage)
+  textStrokeColor = String(props.textStrokeColor)
+  textStrokeSize  = Number(props.textStrokeSize)
 
   canvas = document.createElement('canvas')
   canvas.height = height
@@ -242,17 +298,11 @@ renderImageSrc = (props) ->
     context.drawImage(createImgTag(backgroundImage), 0, 0, width, height)
 
 
-
-
-
-
-
-
-
-
-  context.font = "#{fontSize}px #{fontFamily}"
-  context.fillStyle = textColor
+  context.font         = "#{fontStyle} normal #{fontWeight} #{fontSize}px #{fontFamily}"
+  context.fillStyle    = textColor
   context.textBaseline = 'bottom'
+  context.strokeStyle  = textStrokeColor
+  context.lineWidth    = textStrokeSize
 
   lines = props.text.split("\n")
 
@@ -277,6 +327,8 @@ renderImageSrc = (props) ->
 
   lines.forEach (line) ->
     context.fillText(line, x, y)
+    context.strokeText(line, x, y) if textStrokeSize > 0
+
     y += fontSize
 
 
