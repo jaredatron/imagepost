@@ -6,7 +6,7 @@ gem 'sprockets'
 gem 'coffee-script'
 gem 'compass'
 gem 'sass'
-gem 'react-source', '0.11.0'
+gem 'react-source'
 gem 'haml'
 gem 'rack-ssl'
 

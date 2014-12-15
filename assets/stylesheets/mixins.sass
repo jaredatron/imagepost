@@ -1,0 +1,61 @@
+=position($position, $top: nil, $right: nil, $bottom: nil, $left: nil)
+  position: $position
+  @if $top != nil
+    top: $top
+  @if $right != nil
+    right: $right
+  @if $bottom != nil
+    bottom: $bottom
+  @if $left != nil
+    left: $left
+
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-o-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
+=display-flex
+  +experimental-value(display, flex, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex-direction($value)
+  +experimental(flex-direction, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex-wrap($value)
+  +experimental(flex-wrap, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=justify-content($value)
+  +experimental(justify-content, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex-grow($value)
+  +experimental(flex-grow, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex-shrink($value)
+  +experimental(flex-shrink, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=align-items($value)
+  +experimental(align-items, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=align-content($value)
+  +experimental(align-content, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex($value)
+  +experimental(flex, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=flex-basis($value)
+  +experimental(flex-basis, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=user-select($value)
+  +experimental(user-select, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=no-select
+  -webkit-touch-callout: none
+  +user-select(none)
+
+
+=animation($value)
+  +experimental(animation, $value, -moz, -webkit, not -o, -ms, not -khtml, official)
