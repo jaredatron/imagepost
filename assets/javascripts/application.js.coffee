@@ -1,3 +1,4 @@
+#= require 'jquery'
 #= require 'react-with-addons'
 #= require 'react-component'
 #= require 'App'
@@ -6,6 +7,6 @@
 
 React.render(App(), document.body.children[0])
 
-addEventListener 'beforeunload', ->
+$(window).bind 'beforeunload', ->
   document.body.innerHTML = ''
   undefined
