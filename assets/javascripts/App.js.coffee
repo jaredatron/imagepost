@@ -21,7 +21,7 @@ ImagePost = component
     div
       className: "ImagePost",
 
-      ImagePostTextarea
+      ImagePostTextInput
         height:   @state.height
         width:    @state.width
         value:    @state.text
@@ -36,15 +36,16 @@ ImagePost = component
 
 
 
-ImagePostTextarea = component
+ImagePostTextInput = component
   render: ->
-    textarea
-      className: "ImagePostTextarea"
+    div
+      className: "ImagePostTextInput"
       value: @props.value
       onChange: @props.onChange
       style:
           height: @props.height+'px'
           width:  @props.width+'px'
+      textarea()
 
 ImagePostRendering = component
   render: ->
@@ -67,11 +68,19 @@ renderImageSrc = (props) ->
   canvas.width = props.width
   context = canvas.getContext("2d")
 
-  context.font = '20px Georgia'
+  fontSize = 20
+  fontFamily = 'Georgia'
+
+  context.font = "#{fontSize}px #{fontFamily}"
   context.fillStyle = 'black'
   context.textAlign = 'start'
 
-  context.fillText(props.text, 0, 20)
+  lines = props.text.split("\n");
+
+  top = fontSize
+  lines.forEach (line) ->
+    context.fillText(line, 0, top)
+    top += fontSize
 
 
 
