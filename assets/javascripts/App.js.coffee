@@ -23,6 +23,7 @@ ImagePost = component
     textColor:       'black'
     textStrokeColor: 'white',
     textStrokeSize:  0,
+    textPadding:     0,
     text:            "People of earth\ntake me to your leader"
     backgroundImage: null
 
@@ -34,12 +35,10 @@ ImagePost = component
 
       FormGroup
         label: 'Size'
-        input
-          type:     'number'
+        IntegerInput
           valueLink: @linkState('height')
         '  X  '
-        input
-          type:     'number'
+        IntegerInput
           valueLink: @linkState('width')
 
       FormGroup
@@ -69,9 +68,13 @@ ImagePost = component
 
       FormGroup
         label: 'Font Size'
-        input
-          type:     'number'
+        IntegerInput
           valueLink: @linkState('fontSize')
+
+      FormGroup
+        label: 'Text Padding'
+        IntegerInput
+          valueLink: @linkState('textPadding')
 
       FormGroup
         label: 'Text Color'
@@ -86,8 +89,7 @@ ImagePost = component
 
       FormGroup
         label: 'Text Stroke Size'
-        input
-          type:     'number'
+        IntegerInput
           valueLink: @linkState('textStrokeSize')
 
       FormGroup
@@ -100,6 +102,16 @@ ImagePost = component
         ImageUploadInput
           valueLink: @linkState('backgroundImage')
 
+
+IntegerInput = component
+  render: ->
+    input
+      type:  'number'
+      value: @props.valueLink.value
+      onChange: (event) =>
+        value = Number(event.target.value)
+        return if isNaN(value)
+        @props.valueLink.requestChange(value)
 
 FormGroup = component
   focusFirstInput: ->
@@ -284,6 +296,7 @@ renderImageSrc = (props) ->
   backgroundImage = String(props.backgroundImage)
   textStrokeColor = String(props.textStrokeColor)
   textStrokeSize  = Number(props.textStrokeSize)
+  textPadding     = Number(props.textPadding)
 
   canvas = document.createElement('canvas')
   canvas.height = height
@@ -309,21 +322,21 @@ renderImageSrc = (props) ->
   switch props.textAlign[1]
     when 'l'
       context.textAlign = 'start'
-      x = 0
+      x = textPadding
     when 'c'
       context.textAlign = 'center'
       x = (width / 2)
     when 'r'
       context.textAlign = 'end'
-      x = width
+      x = width - textPadding
 
   switch props.textAlign[0]
     when 't'
-      y = fontSize
+      y = fontSize + textPadding
     when 'm'
       y = (height / 2) - (fontSize / 2)
     when 'b'
-      y = height - (fontSize*(lines.length-1))
+      y = height - (fontSize*(lines.length-1)) - textPadding
 
   lines.forEach (line) ->
     context.fillText(line, x, y)
