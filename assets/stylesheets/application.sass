@@ -33,3 +33,18 @@
 .TextAlignSelectInput
   input
     margin-right: 5px
+
+
+.ImageUploadInput
+  > img
+    display: block
+    max-height: 100px
+    max-width: 100%
+  > .selectFilebutton
+    position: relative
+    > input
+      +opacity(0)
+      +position(absolute,0,0,0,0)
+      height: 100%
+      width: 100%
+

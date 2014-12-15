@@ -1,5 +1,5 @@
 component = React.component
-{div, span, textarea, img, input, label, select, option} = React.DOM
+{div, span, textarea, img, input, label, select, option, button} = React.DOM
 
 @App = component
   render: ->
@@ -20,6 +20,7 @@ ImagePost = component
     backgroundColor: 'white'
     textColor: 'black'
     text: "People of earth\ntake me to your leader"
+    backgroundImage: null
 
   render: ->
     div
@@ -68,6 +69,11 @@ ImagePost = component
         label: 'Text'
         ImagePostTextInput
           valueLink: @linkState('text')
+
+      FormGroup
+        label: 'Background Image'
+        ImageUploadInput
+          valueLink: @linkState('backgroundImage')
 
 
 FormGroup = component
@@ -161,6 +167,45 @@ ImagePostTextInput = component
       className: "ImagePostTextInput"
       valueLink: @props.valueLink
 
+
+
+
+ImageUploadInput = component
+  onChange: (event) ->
+    file = event.target.files[0]
+    event.target.value = null
+    return unless file.type.match('image.*')
+    reader = new FileReader()
+    reader.onload = @onLoad
+    reader.readAsDataURL(file)
+
+  onLoad: (event) ->
+    src = event.target.result
+    @props.valueLink.requestChange(src)
+
+  clear: ->
+    @props.valueLink.requestChange(null)
+
+  render: ->
+    if @props.valueLink.value
+      image = img(src:@props.valueLink.value)
+      clearButton = button(onClick: @clear, 'clear')
+
+    selectFilebutton = span
+      className: 'selectFilebutton'
+      button(null, 'Select File')
+      input
+        type: 'file'
+        onChange: @onChange
+    div
+      className: 'ImageUploadInput'
+      image
+      clearButton
+      selectFilebutton
+
+
+
+
 ImagePostRendering = component
   render: ->
 
@@ -182,6 +227,7 @@ renderImageSrc = (props) ->
   width           = Number(props.width)
   textColor       = String(props.textColor)
   backgroundColor = String(props.backgroundColor)
+  backgroundImage = String(props.backgroundImage)
 
   canvas = document.createElement('canvas')
   canvas.height = height
@@ -191,6 +237,18 @@ renderImageSrc = (props) ->
 
   context.fillStyle = backgroundColor
   context.fillRect(0,0,width,height)
+
+  if backgroundImage
+    context.drawImage(createImgTag(backgroundImage), 0, 0, width, height)
+
+
+
+
+
+
+
+
+
 
   context.font = "#{fontSize}px #{fontFamily}"
   context.fillStyle = textColor
@@ -227,3 +285,9 @@ renderImageSrc = (props) ->
   window.DEBUG_CANVAS_CONTEXT = context
 
   return canvas.toDataURL("image/png")
+
+
+createImgTag = (src) ->
+  x = document.createElement('img')
+  x.src = src
+  x
